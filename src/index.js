@@ -1,3 +1,7 @@
+// Babel configuration next
+
+//import initializeStars from './initialize-stars'
+
 const init = () => {
   const canvas = document.createElement('canvas')
   canvas.width = window.innerWidth
@@ -12,26 +16,32 @@ const init = () => {
 
   const a = canvas.width * 0.75 / 2
   const b = canvas.height * 0.75 / 2
+  const stars = 10
   let x = -a
-  let increment = 5
+  let y = 0
+  let increment = 1
   let flipY = false
 
+  //initializeStars(stars)
   gameLoop()
 
-
   function gameLoop() {
-     requestAnimationFrame(gameLoop)
+    requestAnimationFrame(gameLoop)
+    ctx.clearRect(-canvas.width, -canvas.height, canvas.width * 2, canvas.height * 2)
 
-     y = Math.sqrt((b**2) * (1 - (x**2 / a**2)))
-     if(flipY)
+    y = Math.sqrt((b**2) * (1 - (x**2 / a**2)))
+    if(flipY)
       y = -y
 
-     ctx.beginPath()
-     ctx.moveTo(0, 0)
-     ctx.lineTo(x, y)
-     ctx.stroke()
+    ctx.save()
+    ctx.rotate(Math.PI / 3)
 
-     if(x < -a || x > a) {
+    ctx.fillStyle = 'RGB(150, 100, 100)'
+    ctx.fillRect(x, y, 1, 1)
+
+    ctx.restore()
+
+    if(x < -a || x > a) {
       flipY = !flipY
       increment = -increment
     }
@@ -40,22 +50,4 @@ const init = () => {
   }
 }
 
-
-
-const drawEllipse = (ctx, a, b) => {
-  for(let x = -a; x <= a; x++) {
-      y = Math.sqrt((b**2) * (1 - (x**2 / a**2)))
-
-      ctx.beginPath()
-      ctx.moveTo(0, 0)
-      ctx.lineTo(x, y)
-      ctx.stroke()
-  }
-}
-
 document.addEventListener("DOMContentLoaded", init, false)
-
-//drawEllipse(ctx, canvas.width * 0.75 / 2, canvas.height * 0.75 / 2)
-
-// ctx.fillStyle = 'RGB(100, 150, 100)'
-// ctx.fillRect(0, 0, 2, 2)
