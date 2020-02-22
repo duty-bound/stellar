@@ -90,11 +90,15 @@
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-// Babel configuration next
-//import initializeStars from './initialize-stars'
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _initialize_stars__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./initialize-stars */ "./src/initialize-stars.js");
+// test getRandom
+
+
 var init = function init() {
   var canvas = document.createElement('canvas');
   canvas.width = window.innerWidth;
@@ -107,35 +111,158 @@ var init = function init() {
   ctx.lineWidth = 1;
   var a = canvas.width * 0.75 / 2;
   var b = canvas.height * 0.75 / 2;
-  var stars = 10;
+  var numberOfStars = 50;
+  var stars;
   var x = -a;
   var y = 0;
   var increment = 1;
-  var flipY = false; //initializeStars(stars)
-
-  gameLoop();
+  var flipY = false;
+  Object(_initialize_stars__WEBPACK_IMPORTED_MODULE_0__["initializeStars"])(numberOfStars, canvas.width, canvas.height).then(function (data) {
+    return stars = data;
+  }).then(function () {
+    return gameLoop();
+  });
 
   function gameLoop() {
     requestAnimationFrame(gameLoop);
     ctx.clearRect(-canvas.width, -canvas.height, canvas.width * 2, canvas.height * 2);
-    y = Math.sqrt(Math.pow(b, 2) * (1 - Math.pow(x, 2) / Math.pow(a, 2)));
-    if (flipY) y = -y;
-    ctx.save();
-    ctx.rotate(Math.PI / 3);
-    ctx.fillStyle = 'RGB(150, 100, 100)';
-    ctx.fillRect(x, y, 1, 1);
-    ctx.restore();
+    var c = 0;
 
-    if (x < -a || x > a) {
-      flipY = !flipY;
-      increment = -increment;
+    for (var i = 0; i < stars.length; i++) {
+      ctx.fillStyle = stars[i].color;
+      c = stars[i].currentPosition;
+      ctx.fillRect(stars[i].trajectory[c].x, stars[i].trajectory[c].y, 2, 2);
+      stars[i].currentPosition++;
+      if (c === stars[i].trajectory.length - 1) stars[i].currentPosition = 0;
     }
 
-    x += increment;
+    ctx.restore();
   }
 };
 
-document.addEventListener("DOMContentLoaded", init, false);
+document.addEventListener("DOMContentLoaded", init, false); // y = Math.sqrt((b**2) * (1 - (x**2 / a**2)))
+//
+// if(flipY)
+//   y = -y
+//
+// ctx.save()
+// ctx.rotate(Math.PI / 3)
+//
+// ctx.fillStyle = 'RGB(150, 100, 100)'
+// ctx.fillRect(x, y, 1, 1)
+// x += increment
+
+/***/ }),
+
+/***/ "./src/initialize-stars.js":
+/*!*********************************!*\
+  !*** ./src/initialize-stars.js ***!
+  \*********************************/
+/*! exports provided: initializeStars */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initializeStars", function() { return initializeStars; });
+/* harmony import */ var _star__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./star */ "./src/star.js");
+/* harmony import */ var _util_get_trajectory__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./util/get-trajectory */ "./src/util/get-trajectory.js");
+/* harmony import */ var _util_get_random__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./util/get-random */ "./src/util/get-random.js");
+
+
+
+var initializeStars = function initializeStars(n, width, height) {
+  var p = new Promise(function (resolve) {
+    var w = width / 2;
+    var h = height / 2;
+    var stars = [];
+    var color;
+    var a = 0;
+    var b = 0;
+
+    for (var i = 0; i < n; i++) {
+      color = "RGB(".concat(Object(_util_get_random__WEBPACK_IMPORTED_MODULE_2__["getRandom"])(0, 255), ", ").concat(Object(_util_get_random__WEBPACK_IMPORTED_MODULE_2__["getRandom"])(0, 255), ", ").concat(Object(_util_get_random__WEBPACK_IMPORTED_MODULE_2__["getRandom"])(0, 255), ")");
+      a = Object(_util_get_random__WEBPACK_IMPORTED_MODULE_2__["getRandom"])(100, w);
+      b = Object(_util_get_random__WEBPACK_IMPORTED_MODULE_2__["getRandom"])(100, h);
+      stars.push(new _star__WEBPACK_IMPORTED_MODULE_0__["Star"](color, Object(_util_get_trajectory__WEBPACK_IMPORTED_MODULE_1__["getTrajectory"])(a, b), Object(_util_get_random__WEBPACK_IMPORTED_MODULE_2__["getRandom"])(a, a * 2 - 1), true));
+    }
+
+    resolve(stars);
+  });
+  return p;
+};
+
+/***/ }),
+
+/***/ "./src/star.js":
+/*!*********************!*\
+  !*** ./src/star.js ***!
+  \*********************/
+/*! exports provided: Star */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Star", function() { return Star; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Star = function Star(color, trajectory, currentPosition) {
+  _classCallCheck(this, Star);
+
+  this.color = color;
+  this.trajectory = trajectory;
+  this.currentPosition = currentPosition;
+};
+
+/***/ }),
+
+/***/ "./src/util/get-random.js":
+/*!********************************!*\
+  !*** ./src/util/get-random.js ***!
+  \********************************/
+/*! exports provided: getRandom */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRandom", function() { return getRandom; });
+var getRandom = function getRandom(min, max) {
+  return min + Math.floor(Math.random() * Math.floor(max));
+};
+
+/***/ }),
+
+/***/ "./src/util/get-trajectory.js":
+/*!************************************!*\
+  !*** ./src/util/get-trajectory.js ***!
+  \************************************/
+/*! exports provided: getTrajectory */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTrajectory", function() { return getTrajectory; });
+var getTrajectory = function getTrajectory(a, b) {
+  var y = 0;
+  var trajectory = [];
+
+  for (var x = -a; x <= a; x++) {
+    y = Math.sqrt(Math.pow(b, 2) * (1 - Math.pow(x, 2) / Math.pow(a, 2)));
+    trajectory.push({
+      x: x,
+      y: y
+    });
+  }
+
+  for (var _x = a + 1; _x > -a; _x--) {
+    y = -Math.sqrt(Math.pow(b, 2) * (1 - Math.pow(_x, 2) / Math.pow(a, 2)));
+    trajectory.push({
+      x: _x,
+      y: y
+    });
+  }
+
+  return trajectory;
+};
 
 /***/ })
 
