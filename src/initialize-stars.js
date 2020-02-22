@@ -11,6 +11,7 @@ export const initializeStars = (n, width, height) => {
     let color
     let a = 0
     let b = 0
+    const currentPosition = 0 // getRandom(a, (a * 2) -1)
 
     for(let i = 0; i < n; i++) {
       color = `RGB(${getRandom(0, 255)}, ${getRandom(0, 255)}, ${getRandom(0, 255)})`
@@ -19,7 +20,7 @@ export const initializeStars = (n, width, height) => {
       stars.push(new Star(
         color,
         getTrajectory(a, b),
-        getRandom(a, (a * 2) -1),
+        currentPosition,
         true
       ))
     }

@@ -119,7 +119,8 @@ var init = function init() {
   var flipY = false;
   Object(_initialize_stars__WEBPACK_IMPORTED_MODULE_0__["initializeStars"])(numberOfStars, canvas.width, canvas.height).then(function (data) {
     return stars = data;
-  }).then(function () {
+  }) //.then(() => console.log(stars))
+  .then(function () {
     return gameLoop();
   });
 
@@ -131,7 +132,7 @@ var init = function init() {
     for (var i = 0; i < stars.length; i++) {
       ctx.fillStyle = stars[i].color;
       c = stars[i].currentPosition;
-      ctx.fillRect(stars[i].trajectory[c].x, stars[i].trajectory[c].y, 2, 2);
+      ctx.fillRect(stars[i].trajectory[c].x, stars[i].trajectory[c].y, 20, 20);
       stars[i].currentPosition++;
       if (c === stars[i].trajectory.length - 1) stars[i].currentPosition = 0;
     }
@@ -140,17 +141,7 @@ var init = function init() {
   }
 };
 
-document.addEventListener("DOMContentLoaded", init, false); // y = Math.sqrt((b**2) * (1 - (x**2 / a**2)))
-//
-// if(flipY)
-//   y = -y
-//
-// ctx.save()
-// ctx.rotate(Math.PI / 3)
-//
-// ctx.fillStyle = 'RGB(150, 100, 100)'
-// ctx.fillRect(x, y, 1, 1)
-// x += increment
+document.addEventListener("DOMContentLoaded", init, false);
 
 /***/ }),
 
@@ -178,12 +169,13 @@ var initializeStars = function initializeStars(n, width, height) {
     var color;
     var a = 0;
     var b = 0;
+    var currentPosition = 0; // getRandom(a, (a * 2) -1)
 
     for (var i = 0; i < n; i++) {
       color = "RGB(".concat(Object(_util_get_random__WEBPACK_IMPORTED_MODULE_2__["getRandom"])(0, 255), ", ").concat(Object(_util_get_random__WEBPACK_IMPORTED_MODULE_2__["getRandom"])(0, 255), ", ").concat(Object(_util_get_random__WEBPACK_IMPORTED_MODULE_2__["getRandom"])(0, 255), ")");
       a = Object(_util_get_random__WEBPACK_IMPORTED_MODULE_2__["getRandom"])(100, w);
       b = Object(_util_get_random__WEBPACK_IMPORTED_MODULE_2__["getRandom"])(100, h);
-      stars.push(new _star__WEBPACK_IMPORTED_MODULE_0__["Star"](color, Object(_util_get_trajectory__WEBPACK_IMPORTED_MODULE_1__["getTrajectory"])(a, b), Object(_util_get_random__WEBPACK_IMPORTED_MODULE_2__["getRandom"])(a, a * 2 - 1), true));
+      stars.push(new _star__WEBPACK_IMPORTED_MODULE_0__["Star"](color, Object(_util_get_trajectory__WEBPACK_IMPORTED_MODULE_1__["getTrajectory"])(a, b), currentPosition, true));
     }
 
     resolve(stars);
@@ -242,25 +234,30 @@ var getRandom = function getRandom(min, max) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTrajectory", function() { return getTrajectory; });
 var getTrajectory = function getTrajectory(a, b) {
+  var x = 0;
   var y = 0;
   var trajectory = [];
 
-  for (var x = -a; x <= a; x++) {
+  for (var i = 0; i < 2; i += 0.01) {
+    x = a * b / Math.sqrt(Math.pow(b, 2) + Math.pow(a, 2) * Math.pow(Math.tan(i * Math.PI), 2));
     y = Math.sqrt(Math.pow(b, 2) * (1 - Math.pow(x, 2) / Math.pow(a, 2)));
+
+    if (i >= 0.5 && i < 1.0) {
+      x *= -1;
+    } else if (i >= 1.0 && i < 1.5) {
+      x *= -1;
+      y *= -1;
+    } else if (i >= 1.5 && i < 2.0) {
+      y *= -1;
+    }
+
     trajectory.push({
       x: x,
       y: y
     });
   }
 
-  for (var _x = a + 1; _x > -a; _x--) {
-    y = -Math.sqrt(Math.pow(b, 2) * (1 - Math.pow(_x, 2) / Math.pow(a, 2)));
-    trajectory.push({
-      x: _x,
-      y: y
-    });
-  }
-
+  console.log(trajectory);
   return trajectory;
 };
 
