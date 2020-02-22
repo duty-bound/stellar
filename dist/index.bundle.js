@@ -96,48 +96,54 @@
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _initialize_stars__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./initialize-stars */ "./src/initialize-stars.js");
-// test getRandom
+// lighten up front rays
+// write test for util functions
 
 
 var init = function init() {
   var canvas = document.createElement('canvas');
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-  canvas.style.background = 'black';
+  canvas.style.background = 'RGB(40, 40, 50)';
   document.body.appendChild(canvas);
   var ctx = canvas.getContext('2d');
   ctx.translate(canvas.width / 2, canvas.height / 2);
-  ctx.strokeStyle = 'RGB(100, 150, 100)';
+  ctx.strokeStyle = 'RGB(100, 100, 100)';
   ctx.lineWidth = 1;
   var a = canvas.width * 0.75 / 2;
   var b = canvas.height * 0.75 / 2;
-  var numberOfStars = 50;
+  var numberOfStars = 100;
   var stars;
-  var x = -a;
-  var y = 0;
-  var increment = 1;
-  var flipY = false;
+  var count = 0;
+  var drawingFrequency = 5; // the 'increment' constant in 'initialize-stars.js' is fundamental in getting the right animation speed
+
   Object(_initialize_stars__WEBPACK_IMPORTED_MODULE_0__["initializeStars"])(numberOfStars, canvas.width, canvas.height).then(function (data) {
     return stars = data;
-  }) //.then(() => console.log(stars))
-  .then(function () {
+  }).then(function () {
     return gameLoop();
   });
 
   function gameLoop() {
     requestAnimationFrame(gameLoop);
-    ctx.clearRect(-canvas.width, -canvas.height, canvas.width * 2, canvas.height * 2);
-    var c = 0;
 
-    for (var i = 0; i < stars.length; i++) {
-      ctx.fillStyle = stars[i].color;
-      c = stars[i].currentPosition;
-      ctx.fillRect(stars[i].trajectory[c].x, stars[i].trajectory[c].y, 20, 20);
-      stars[i].currentPosition++;
-      if (c === stars[i].trajectory.length - 1) stars[i].currentPosition = 0;
+    if (count % drawingFrequency === 0) {
+      ctx.clearRect(-canvas.width, -canvas.height, canvas.width * 2, canvas.height * 2);
+      var c = 0;
+
+      for (var i = 0; i < stars.length; i++) {
+        ctx.fillStyle = stars[i].color;
+        c = stars[i].currentPosition;
+        ctx.fillRect(stars[i].trajectory[c].x, stars[i].trajectory[c].y, 3, 3);
+        ctx.beginPath();
+        ctx.moveTo(stars[i].trajectory[c].x + 2, stars[i].trajectory[c].y);
+        ctx.lineTo(stars[i].trajectory[c].x + canvas.height * 2 * Math.cos(Math.PI / 3), stars[i].trajectory[c].y - canvas.height * 4 * Math.sin(Math.PI / 3));
+        ctx.stroke();
+        stars[i].currentPosition++;
+        if (c === stars[i].trajectory.length - 1) stars[i].currentPosition = 0;
+      }
     }
 
-    ctx.restore();
+    count++;
   }
 };
 
@@ -169,13 +175,16 @@ var initializeStars = function initializeStars(n, width, height) {
     var color;
     var a = 0;
     var b = 0;
-    var currentPosition = 0; // getRandom(a, (a * 2) -1)
+    var increment = 0.0005; // this determines how many points the trajectory will have. It intrinsically affects the animation speed
+
+    var currentPosition = 0;
 
     for (var i = 0; i < n; i++) {
       color = "RGB(".concat(Object(_util_get_random__WEBPACK_IMPORTED_MODULE_2__["getRandom"])(0, 255), ", ").concat(Object(_util_get_random__WEBPACK_IMPORTED_MODULE_2__["getRandom"])(0, 255), ", ").concat(Object(_util_get_random__WEBPACK_IMPORTED_MODULE_2__["getRandom"])(0, 255), ")");
       a = Object(_util_get_random__WEBPACK_IMPORTED_MODULE_2__["getRandom"])(100, w);
-      b = Object(_util_get_random__WEBPACK_IMPORTED_MODULE_2__["getRandom"])(100, h);
-      stars.push(new _star__WEBPACK_IMPORTED_MODULE_0__["Star"](color, Object(_util_get_trajectory__WEBPACK_IMPORTED_MODULE_1__["getTrajectory"])(a, b), currentPosition, true));
+      b = a * w / h;
+      currentPosition = Object(_util_get_random__WEBPACK_IMPORTED_MODULE_2__["getRandom"])(0, 2 / increment);
+      stars.push(new _star__WEBPACK_IMPORTED_MODULE_0__["Star"](color, Object(_util_get_trajectory__WEBPACK_IMPORTED_MODULE_1__["getTrajectory"])(a, b, increment), currentPosition, true));
     }
 
     resolve(stars);
@@ -233,12 +242,12 @@ var getRandom = function getRandom(min, max) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTrajectory", function() { return getTrajectory; });
-var getTrajectory = function getTrajectory(a, b) {
+var getTrajectory = function getTrajectory(a, b, increment) {
   var x = 0;
   var y = 0;
   var trajectory = [];
 
-  for (var i = 0; i < 2; i += 0.01) {
+  for (var i = 0; i < 2; i += increment) {
     x = a * b / Math.sqrt(Math.pow(b, 2) + Math.pow(a, 2) * Math.pow(Math.tan(i * Math.PI), 2));
     y = Math.sqrt(Math.pow(b, 2) * (1 - Math.pow(x, 2) / Math.pow(a, 2)));
 
@@ -257,7 +266,6 @@ var getTrajectory = function getTrajectory(a, b) {
     });
   }
 
-  console.log(trajectory);
   return trajectory;
 };
 

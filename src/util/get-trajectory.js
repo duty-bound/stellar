@@ -1,9 +1,9 @@
-export const getTrajectory = (a, b) => {
+export const getTrajectory = (a, b, increment) => {
   let x = 0
   let y = 0
   const trajectory = []
 
-  for(let i = 0; i < 2; i +=0.01) {
+  for(let i = 0; i < 2; i +=increment) {
     x = (a * b) / Math.sqrt((b**2) + (a**2) * ((Math.tan(i * Math.PI))**2))
     y = Math.sqrt((b**2) * (1 - (x**2 / a**2)))
     if(i >= 0.5 && i < 1.0) {
@@ -17,6 +17,5 @@ export const getTrajectory = (a, b) => {
 
     trajectory.push({x, y})
   }
-  console.log(trajectory)
   return trajectory
 }
