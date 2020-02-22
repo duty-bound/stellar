@@ -25,6 +25,7 @@ const init = () => {
 
   initializeStars(numberOfStars, canvas.width, canvas.height)
   .then(data => stars = data)
+  //.then(() => console.log(stars))
   .then(() => gameLoop())
 
   function gameLoop() {
@@ -35,31 +36,15 @@ const init = () => {
     for(let i = 0; i < stars.length; i++) {
       ctx.fillStyle = stars[i].color
       c = stars[i].currentPosition
-      ctx.fillRect(stars[i].trajectory[c].x, stars[i].trajectory[c].y, 2, 2)
+
+      ctx.fillRect(stars[i].trajectory[c].x, stars[i].trajectory[c].y, 20, 20)
 
       stars[i].currentPosition++
       if(c === stars[i].trajectory.length - 1)
         stars[i].currentPosition = 0
     }
-
-
     ctx.restore()
-
-
-
   }
 }
 
 document.addEventListener("DOMContentLoaded", init, false)
-
-// y = Math.sqrt((b**2) * (1 - (x**2 / a**2)))
-    //
-    // if(flipY)
-    //   y = -y
-    //
-    // ctx.save()
-    // ctx.rotate(Math.PI / 3)
-    //
-    // ctx.fillStyle = 'RGB(150, 100, 100)'
-    // ctx.fillRect(x, y, 1, 1)
-// x += increment
