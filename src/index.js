@@ -1,4 +1,4 @@
-// lighten up front rays
+// new Branch! does not look good on mobile
 // write test for util functions
 
 import { initializeStars } from './initialize-stars'
@@ -10,19 +10,21 @@ const init = () => {
   canvas.style.background = 'RGB(40, 40, 50)'
   document.body.appendChild(canvas)
 
-  const ctx = canvas.getContext('2d')
-  ctx.translate(canvas.width / 2, canvas.height / 2)
-  ctx.strokeStyle = 'RGB(100, 100, 100)'
-  ctx.lineWidth = 1
-
-  const a = canvas.width * 0.75 / 2
-  const b = canvas.height * 0.75 / 2
+  const strokeDark = 'RGB(50, 50, 50)'
+  const strokeMedium = 'RGB(75, 75, 75)'
+  const strokeLight = 'RGB(100, 100, 100)'
   const numberOfStars = 100
   let stars
   let count = 0
   const drawingFrequency = 5 // the 'increment' constant in 'initialize-stars.js' is fundamental in getting the right animation speed
+  const ellipseMaxWidth = canvas.width * 0.60
+  const ellipseMaxHeight = canvas.height * 0.80
 
-  initializeStars(numberOfStars, canvas.width, canvas.height)
+  const ctx = canvas.getContext('2d')
+  ctx.translate(canvas.width / 2, canvas.height / 4)
+  ctx.lineWidth = 1
+
+  initializeStars(numberOfStars, ellipseMaxWidth, ellipseMaxHeight)
   .then(data => stars = data)
   .then(() => gameLoop())
 
@@ -37,10 +39,22 @@ const init = () => {
       for(let i = 0; i < stars.length; i++) {
         ctx.fillStyle = stars[i].color
         c = stars[i].currentPosition
-
-        ctx.fillRect(stars[i].trajectory[c].x, stars[i].trajectory[c].y, 3, 3)
         ctx.beginPath()
-        ctx.moveTo(stars[i].trajectory[c].x + 2, stars[i].trajectory[c].y)
+
+        if(stars[i].trajectory[c].x <= -ellipseMaxWidth/2 || stars[i].trajectory[c].x >= ellipseMaxWidth/2) {
+          ctx.fillRect(stars[i].trajectory[c].x, stars[i].trajectory[c].y, 2, 2)
+          ctx.strokeStyle = strokeMedium
+          ctx.moveTo(stars[i].trajectory[c].x + 1, stars[i].trajectory[c].y)
+        } else if (stars[i].trajectory[c].y < 0){
+          ctx.fillRect(stars[i].trajectory[c].x, stars[i].trajectory[c].y, 1, 1)
+          ctx.strokeStyle = strokeDark
+          ctx.moveTo(stars[i].trajectory[c].x, stars[i].trajectory[c].y)
+        } else {
+          ctx.fillRect(stars[i].trajectory[c].x, stars[i].trajectory[c].y, 3, 3)
+          ctx.strokeStyle = strokeLight
+          ctx.moveTo(stars[i].trajectory[c].x + 2, stars[i].trajectory[c].y)
+        }
+
         ctx.lineTo(
           stars[i].trajectory[c].x + ((canvas.height * 2) * Math.cos(Math.PI / 3)),
           stars[i].trajectory[c].y - ((canvas.height * 4) * Math.sin(Math.PI / 3))
