@@ -1,4 +1,4 @@
-// new Branch! does not look good on mobile
+// new Branch! refresh with screen sizing
 // write test for util functions
 
 import { initializeStars } from './initialize-stars'
@@ -13,15 +13,15 @@ const init = () => {
   const strokeDark = 'RGB(50, 50, 50)'
   const strokeMedium = 'RGB(75, 75, 75)'
   const strokeLight = 'RGB(100, 100, 100)'
-  const numberOfStars = 100
+  const numberOfStars = 80
   let stars
   let count = 0
-  const drawingFrequency = 5 // the 'increment' constant in 'initialize-stars.js' is fundamental in getting the right animation speed
-  const ellipseMaxWidth = canvas.width * 0.60
-  const ellipseMaxHeight = canvas.height * 0.80
+  const drawingFrequency = 2 // the 'increment' constant in 'initialize-stars.js' is fundamental in getting the right animation speed
+  const ellipseMaxWidth = canvas.width
+  const ellipseMaxHeight = canvas.height
 
   const ctx = canvas.getContext('2d')
-  ctx.translate(canvas.width / 2, canvas.height / 4)
+  ctx.translate(canvas.width / 2, canvas.height / 2)
   ctx.lineWidth = 1
 
   initializeStars(numberOfStars, ellipseMaxWidth, ellipseMaxHeight)
@@ -41,7 +41,7 @@ const init = () => {
         c = stars[i].currentPosition
         ctx.beginPath()
 
-        if(stars[i].trajectory[c].x <= -ellipseMaxWidth/2 || stars[i].trajectory[c].x >= ellipseMaxWidth/2) {
+        if(stars[i].trajectory[c].x <= -ellipseMaxWidth/4 || stars[i].trajectory[c].x >= ellipseMaxWidth/4) {
           ctx.fillRect(stars[i].trajectory[c].x, stars[i].trajectory[c].y, 2, 2)
           ctx.strokeStyle = strokeMedium
           ctx.moveTo(stars[i].trajectory[c].x + 1, stars[i].trajectory[c].y)
@@ -56,8 +56,8 @@ const init = () => {
         }
 
         ctx.lineTo(
-          stars[i].trajectory[c].x + ((canvas.height * 2) * Math.cos(Math.PI / 3)),
-          stars[i].trajectory[c].y - ((canvas.height * 4) * Math.sin(Math.PI / 3))
+          stars[i].trajectory[c].x + ((canvas.height * 2) * Math.cos(Math.PI / 4)),
+          stars[i].trajectory[c].y - ((canvas.height * 4) * Math.sin(Math.PI / 4))
         )
         ctx.stroke()
 
