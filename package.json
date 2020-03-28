@@ -4,11 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "babel": "babel --presets es2015 src/index.js -o dist/index.bundle.js",
     "start": "node server.js",
-    "watch": "webpack --watch",
-    "test": "jest"
+    "watch": "webpack --watch"
   },
   "repository": {
     "type": "git",
