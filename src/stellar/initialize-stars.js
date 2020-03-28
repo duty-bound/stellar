@@ -1,6 +1,6 @@
 import { Star } from './star'
-import { getTrajectory } from './util/get-trajectory'
-import { getRandom } from './util/get-random'
+import { getTrajectory } from '../util/get-trajectory'
+import { getRandom } from '../util/get-random'
 
 
 export const initializeStars = (n, width, height) => {
