@@ -96,7 +96,7 @@
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _initialize_stars__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./initialize-stars */ "./src/initialize-stars.js");
-// lighten up front rays
+// new Branch! refresh with screen sizing
 // write test for util functions
 
 
@@ -109,15 +109,15 @@ var init = function init() {
   var strokeDark = 'RGB(50, 50, 50)';
   var strokeMedium = 'RGB(75, 75, 75)';
   var strokeLight = 'RGB(100, 100, 100)';
-  var numberOfStars = 100;
+  var numberOfStars = 80;
   var stars;
   var count = 0;
-  var drawingFrequency = 5; // the 'increment' constant in 'initialize-stars.js' is fundamental in getting the right animation speed
+  var drawingFrequency = 2; // the 'increment' constant in 'initialize-stars.js' is fundamental in getting the right animation speed
 
-  var ellipseMaxWidth = canvas.width * 0.60;
-  var ellipseMaxHeight = canvas.height * 0.80;
+  var ellipseMaxWidth = canvas.width;
+  var ellipseMaxHeight = canvas.height;
   var ctx = canvas.getContext('2d');
-  ctx.translate(canvas.width / 2, canvas.height / 4);
+  ctx.translate(canvas.width / 2, canvas.height / 2);
   ctx.lineWidth = 1;
   Object(_initialize_stars__WEBPACK_IMPORTED_MODULE_0__["initializeStars"])(numberOfStars, ellipseMaxWidth, ellipseMaxHeight).then(function (data) {
     return stars = data;
@@ -137,7 +137,7 @@ var init = function init() {
         c = stars[i].currentPosition;
         ctx.beginPath();
 
-        if (stars[i].trajectory[c].x <= -ellipseMaxWidth / 2 || stars[i].trajectory[c].x >= ellipseMaxWidth / 2) {
+        if (stars[i].trajectory[c].x <= -ellipseMaxWidth / 4 || stars[i].trajectory[c].x >= ellipseMaxWidth / 4) {
           ctx.fillRect(stars[i].trajectory[c].x, stars[i].trajectory[c].y, 2, 2);
           ctx.strokeStyle = strokeMedium;
           ctx.moveTo(stars[i].trajectory[c].x + 1, stars[i].trajectory[c].y);
@@ -151,7 +151,7 @@ var init = function init() {
           ctx.moveTo(stars[i].trajectory[c].x + 2, stars[i].trajectory[c].y);
         }
 
-        ctx.lineTo(stars[i].trajectory[c].x + canvas.height * 2 * Math.cos(Math.PI / 3), stars[i].trajectory[c].y - canvas.height * 4 * Math.sin(Math.PI / 3));
+        ctx.lineTo(stars[i].trajectory[c].x + canvas.height * 2 * Math.cos(Math.PI / 4), stars[i].trajectory[c].y - canvas.height * 4 * Math.sin(Math.PI / 4));
         ctx.stroke();
         stars[i].currentPosition++;
         if (c === stars[i].trajectory.length - 1) stars[i].currentPosition = 0;
@@ -196,8 +196,8 @@ var initializeStars = function initializeStars(n, width, height) {
 
     for (var i = 0; i < n; i++) {
       color = "RGB(".concat(Object(_util_get_random__WEBPACK_IMPORTED_MODULE_2__["getRandom"])(0, 255), ", ").concat(Object(_util_get_random__WEBPACK_IMPORTED_MODULE_2__["getRandom"])(0, 255), ", ").concat(Object(_util_get_random__WEBPACK_IMPORTED_MODULE_2__["getRandom"])(0, 255), ")");
-      a = Object(_util_get_random__WEBPACK_IMPORTED_MODULE_2__["getRandom"])(100, w);
-      b = a * w / h;
+      a = Object(_util_get_random__WEBPACK_IMPORTED_MODULE_2__["getRandom"])(150, w);
+      b = h;
       currentPosition = Object(_util_get_random__WEBPACK_IMPORTED_MODULE_2__["getRandom"])(0, 2 / increment);
       stars.push(new _star__WEBPACK_IMPORTED_MODULE_0__["Star"](color, Object(_util_get_trajectory__WEBPACK_IMPORTED_MODULE_1__["getTrajectory"])(a, b, increment), currentPosition, true));
     }
