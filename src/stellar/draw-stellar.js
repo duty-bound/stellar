@@ -4,7 +4,6 @@ export const drawStellar = (canvas, canvasDimensions) => {
     canvas.width = canvasDimensions.width,
     canvas.height = canvasDimensions.height,
     canvas.style.background = 'RGB(40, 40, 50)'
-    document.body.appendChild(canvas)
   
     const strokeDark = 'RGB(50, 50, 50)'
     const strokeMedium = 'RGB(75, 75, 75)'
