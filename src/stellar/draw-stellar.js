@@ -1,14 +1,14 @@
 import { initializeStars } from './initialize-stars'
 
-export const drawStellar = canvas => {
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
+export const drawStellar = (canvas, canvasDimensions) => {
+    canvas.width = canvasDimensions.width,
+    canvas.height = canvasDimensions.height,
     canvas.style.background = 'RGB(40, 40, 50)'
     document.body.appendChild(canvas)
   
     const strokeDark = 'RGB(50, 50, 50)'
     const strokeMedium = 'RGB(75, 75, 75)'
-    const strokeLight = 'RGB(100, 100, 100)'
+    const strokeLight = 'RGB(125, 125, 125)'
     const numberOfStars = 80
     let stars
     let count = 0
